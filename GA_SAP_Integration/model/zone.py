@@ -7,6 +7,12 @@ class Zone(models.Model):
     code = fields.Char(string='Code')
 
 
+Zone()
+
+
 class ResPartner(models.Model):
     _inherit = 'res.partner'
     zone_id = fields.Many2one('zone.zone', 'Zone', required=True)
+
+
+ResPartner()
