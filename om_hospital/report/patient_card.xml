@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="report_patient">
+        <t t-call="web.external_layout">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <h1>test</h1>
+                    Name :
+                    <t t-esc="doc.patient_name"/>
+                    Age :
+                    <t t-esc="doc.patient_age"/>
+                    Gender :
+                    <t t-esc="doc.gender"/>
+                    Test :
+                    <t t-esc="doc.test"/>
+                    Age Group :
+                    <t t-esc="doc.age_group"/>
+                    Notes :
+                    <t t-esc="doc.notes"/>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

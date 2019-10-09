@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!--        smart button action-->
+        <record model="ir.actions.act_window" id="open_patients_appointment">
+            <field name="name">Appointments</field>
+            <field name="res_model">hospital.appointment</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('patient_Id', '=', active_id)]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <!--           sale_order inherited view -->
+        <record model="ir.ui.view" id="form_sale_order_inherited">
+            <field name="name">form.sale.order.inherited.new</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="patient"/>
+                </field>
+            </field>
+        </record>
+
+
+        <!--        patient Search view-->
+        <record model="ir.ui.view" id="patient_search">
+            <field name="name">hospital.patient.search</field>
+            <field name="model">hospital.patient</field>
+            <field name="arch" type="xml">
+                <search string="Patients">
+                    <field name="patient_name" filter_domain="['|',('patient_name','ilike',self),
+                    ('name_seq','ilike',self)]" string="Name / Patient Id"/>
+                    <field name="patient_age" string="Age"/>
+                    <filter name="male" string="Male" domain="[('gender','=','male')]"
+                            help="Patients with gender as Male"/>
+                    <filter name="female" string="Female" domain="[('gender','=','female')]"
+                            help="Patients with gender as Female"/>
+                    <filter name="age greater than 10" string="Age greater than 10"
+                            domain="[('patient_age','&gt;=','12')]" help="Patients with age greater than 10"/>
+                    <filter name="age less than 10" string="Age less than 10" domain="[('patient_age','&lt;','10')]"
+                            help="Patients with age less than 10"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Patient age" name="patient age" context="{'group_by':'patient_age'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+        <!--        Patient tree view-->
+        <record id="patient_view" model="ir.ui.view">
+            <field name="name">hospital.patient.view</field>
+            <field name="model">hospital.patient</field>
+            <field name="arch" type="xml">
+                <tree string="Patients">
+                    <field name="id" sum="sum of id"/>
+                    <field name="name_seq"/>
+                    <field name="patient_name"/>
+                    <field name="patient_age" avg="avg of Age"/>
+                    <field name="gender"/>
+                    <field name="doctor"/>
+                    <field name="test"/>
+                    <field name="age_group"/>
+                    <field name="notes"/>
+                    <field name="image"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!--        Patient form view-->
+        <record id="patient_form" model="ir.ui.view">
+            <field name="name">hospital.patient.form</field>
+            <field name="model">hospital.patient</field>
+            <field name="arch" type="xml">
+                <form string="Patients">
+                    <header>
+                        <button name="%(om_hospital.create_appointment_wizard)d" type="action"
+                                string="Create Appointment" class="oe_highlight"/>
+                    </header>
+                    <sheet>
+                        <!--                        smart button object-->
+                        <div class="oe_button_box" name="button_box">
+                            <button name="open_patients_appointment" type="object" icon="fa-calendar"
+                                    class="oe_stat_button">
+                                <field name="appointment_count" string="Appointments" widget="statinfo"/>
+                            </button>
+                            <!--                            smart button action-->
+                            <button name="%(open_patients_appointment)d" type="action" icon="fa-usd"
+                                    class="oe_stat_button">
+                                <field name="appointment_count" string="Appointments" widget="statinfo"/>
+                            </button>
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                       options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                            </button>
+                        </div>
+
+                        <notebook colspan="4">
+                            <page name="page1" string="page1">
+                                <field name="image" widget="image" class="oe_avatar"/>
+                                <div class="oe_title">
+                                    <h1>
+                                        <field name="patient_name"/>
+                                    </h1>
+                                </div>
+                                <group>
+                                    <group>
+                                        <field name="patient_age"/>
+                                        <field name="gender"/>
+                                        <field name="doctor"
+                                               options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                                        <!--                                        widget = "selection"-->
+                                    </group>
+                                    <group>
+                                        <field name="test"/>
+                                        <field name="age_group"/>
+                                        <field name="name_seq" readonly="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="notes" style="width:260%"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page name="page2" string="page2">
+                                <group>
+                                    <group>
+                                        <field name="patient_name"/>
+                                    </group>
+                                    <group>
+                                        <field name="patient_age"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <field name="notes"/>
+                                    <field name="image" widget="image" class="oe_avatar"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread" options="{'post_refresh':'recipients'}"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
+        <!--        menuitem patient action-->
+        <record id="action_patients" model="ir.actions.act_window">
+            <field name="name">Patients</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hospital.patient</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="patient_search"/>
+            <field name="context">{'search_default_male': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create First Patient!
+                </p>
+            </field>
+        </record>
+
+
+        <!--        hospital menuitem-->
+        <menuitem id="hospital_menu" name="Hospital" sequence="3" web_icon="om_hospital,static/description/icon.png"
+                  groups="group_hospital_doctor"/>
+
+        <!--        patient menuitem-->
+        <menuitem id="patients_menu" name="Patients" parent="hospital_menu" action="action_patients"/>
+
+        <!--        create appointment menuitem-->
+        <menuitem id="create_appointment" name="Create Appointment" parent="hospital_menu"
+                  action="create_appointment_wizard"/>
+
+    </data>
+</odoo>

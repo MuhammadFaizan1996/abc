@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="patient_rec" model="hospital.patient">
+            <field name="patient_name">XYZ</field>
+            <field name="patient_age">33</field>
+            <field name="gender">male</field>
+            <field name="test">health</field>
+            <field name="notes">test is good</field>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="doctor_rec1" model="hospital.doctor">
+            <field name="name">John</field>
+            <field name="Gender">male</field>
+        </record>
+        <record id="doctor_rec2" model="hospital.doctor">
+            <field name="name">Fahad</field>
+            <field name="Gender">male</field>
+        </record>
+        <record id="doctor_rec3" model="hospital.doctor">
+            <field name="name">Sara</field>
+            <field name="Gender">female</field>
+        </record>
+        <record id="doctor_rec4" model="hospital.doctor">
+            <field name="name">Smith</field>
+            <field name="Gender">male</field>
+        </record>
+    </data>
+</odoo>
